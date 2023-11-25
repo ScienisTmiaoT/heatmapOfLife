@@ -1,0 +1,135 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    background-image: url('https://unsplash.com/photos/_i-iUhgXUBQ/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8MjUxfHxncmFkaWVudHxlbnwwfHx8fDE3MDA4Nzg4NzB8MA&force=true');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+
+#heatmap-container {
+    margin: 10vh auto; /* Adjust the top margin as needed */
+    border-collapse: collapse;
+}
+
+.table-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    float: left; /* Add float: left */
+}
+
+
+.cell {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Add smooth transition effect */
+
+}
+
+.cell:hover {
+    background-color: lightcoral; /* Change to your desired hover color (light orange) */
+}
+
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.popup .cell:hover {
+    background-color: initial; /* Override the hover effect for cells in the popup */
+}
+
+.popup .cell {
+    pointer-events: none; /* Make the cells unclickable */
+}
+
+.popup-title {
+    font-size: 18px;
+    /* font-weight: bold; */
+    margin-bottom: 10px;
+}
+
+.popup-content {
+    background-color: #fff;
+    padding: 20px;
+    max-width: 400px;
+    margin: 10% auto;
+}
+
+.popup-content table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.close-popup {
+    color: #aaa;
+    float: left; /* Change float to left */
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.passed-day {
+    background-color: #7CBB79;
+}
+
+.current-year-cell {
+    border: 2px solid #82823B
+}
+
+.current-year-cell span {
+    font-size: 8px; /* Adjust the font size as needed */
+    font-weight: normal; /* Set to normal for not bold */
+}
+
+.popup-current-month {
+    /* display: none; */
+    position: absolute;
+    background-color: #C2B1A4;
+    padding: 20px;
+    max-width: 400px;
+    margin: 10% auto;
+    border: 1px solid #ccc;
+    z-index: 2;
+    opacity: 1;
+}
+
+.popup-current-month .popup-title {
+    font-size: 15px;
+    /* font-weight: bold; */
+    margin-bottom: 10px;
+}
+
+.popup-current-month .cell:hover {
+    background-color: initial; /* Override the hover effect for cells in the popup */
+}
+
+.popup-current-month .cell {
+    pointer-events: none; /* Make the cells unclickable */
+}
+
+.marked-cell {
+    color: #ccc; /* Light gray color */
+}
+
+/* Responsive styles for small screens */
+@media only screen and (max-width: 600px) {
+    .popup-current-month {
+        max-width: 90%; /* Adjust the maximum width for small screens */
+        margin: 5% auto;
+        padding: 10px;
+        left: 5%; /* Adjust the left positioning for small screens */
+    }
+}
