@@ -55,8 +55,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    let percent = `${Math.floor((markedCells / totalCells) * 100)}%`;
-    // document.title += ` - ${percent}`;
+    let p_cent = Math.floor((markedCells / totalCells) * 100);
+    // document.title += ` - ${p_cent}`;
 
     // Generate the popup table for the current month
     const currentMonth = months[new Date().getMonth()];
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Create and append the SVG logo
     const logoContainer = document.getElementById("logo");
-    const svgLogo = createSvgLogo(75, percent); // Adjust the size as needed
+    const svgLogo = createSvgLogo(75, p_cent); // Adjust the size as needed
     logoContainer.appendChild(svgLogo);
 
     // Function to create the SVG logo
