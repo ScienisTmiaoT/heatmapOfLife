@@ -12,16 +12,23 @@ document.addEventListener("DOMContentLoaded", function () {
         return new Date(year, months.indexOf(month) + 1, 0).getDate();
     }
 
-    //start from Sep
+    //start from Sep (date of birth)
     let start = 8;
-    const totalCells = gridSize * gridSize;
+    // 75 years
+    const longevity = 75 * 12;
+    const totalCells = longevity;
     let markedCells = 0;
 
     // Generate the heatmap table
-    for (let i = 0; i < gridSize; i++) {
+    for (let i = 0; i < Math.ceil(longevity / 12); i++) {
         const row = heatmapContainer.insertRow();
+        let done = false;
 
         for (let j = 0; j < gridSize; j++) {
+            if ((i * gridSize + j) >= longevity) {
+                done = true;
+                break;
+            }
             const cell = row.insertCell();
             const month = months[(start + i * gridSize + j) % 12];
             const year = currentYear + Math.floor((start + i * gridSize + j) / 12);
@@ -53,6 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 cell.appendChild(textSpan);
             }
         }
+        if (done) break;
     }
 
     let p_cent = Math.floor((markedCells / totalCells) * 100);
@@ -131,12 +139,12 @@ document.addEventListener("DOMContentLoaded", function () {
         svg.setAttribute("height", size);
 
         // Create a background circle
-    const backgroundCircle = document.createElementNS(svgNS, "circle");
-    backgroundCircle.setAttribute("cx", "50%");
-    backgroundCircle.setAttribute("cy", "50%");
-    backgroundCircle.setAttribute("r", "30%");
-    backgroundCircle.setAttribute("fill", "#688f4e"); // Background color
-    svg.appendChild(backgroundCircle);
+        const backgroundCircle = document.createElementNS(svgNS, "circle");
+        backgroundCircle.setAttribute("cx", "50%");
+        backgroundCircle.setAttribute("cy", "50%");
+        backgroundCircle.setAttribute("r", "30%");
+        backgroundCircle.setAttribute("fill", "#688f4e"); // Background color
+        svg.appendChild(backgroundCircle);
 
         // Create text element
         const text = document.createElementNS(svgNS, "text");
