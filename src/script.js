@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let markedDays = 0;
     let totalDays = 0;
+    let totalDaysCurYear = 0;
+    let markedDaysCurYear = 0;
 
     // Generate the heatmap table
     for (let i = 0; i < Math.ceil(longevity / 12); i++) {
@@ -50,6 +52,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 cell.classList.add("passed-day");
                 markedCells++;
                 markedDays += daysPerMonth;
+                if (year === new Date().getFullYear()) {
+                    markedDaysCurYear += daysPerMonth;
+                }
             }
             totalDays += daysPerMonth;
             // Add a border to the cell if it belongs to the current year
@@ -63,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // textSpan.textContent = formattedMonth;
                 textSpan.textContent = abbreviatedMonth;
                 cell.appendChild(textSpan);
+                totalDaysCurYear += daysPerMonth;
             }
         }
         if (done) break;
@@ -71,10 +77,17 @@ document.addEventListener("DOMContentLoaded", function () {
     // Generate the popup table for the current month
     const currentMonth = months[new Date().getMonth()];
     currentYear = new Date().getFullYear();
-    markedDays += updatePopupRight(currentMonth, currentYear);
+    res = updatePopupRight(currentMonth, currentYear);
+    markedDays += res[0];
+    markedDaysCurYear += res[0];
 
     // Function to update the popup on the right
     function updatePopupRight(selectedMonth, selectedYear) {
+        // Remove the previous popup if it exists
+        const previousPopup = document.querySelector(".popup-current-month");
+        if (previousPopup) {
+            previousPopup.remove();
+        }
         const daysInCurrentMonth = getDaysInMonth(selectedMonth, selectedYear);
 
         const popupContainerCurrentMonth = document.createElement("div");
@@ -126,18 +139,53 @@ document.addEventListener("DOMContentLoaded", function () {
         let abbreviatedMonth = selectedMonth.substring(0, 3);
         const popupTitle = `${abbreviatedMonth} ${selectedYear} - ${percent}%`;
         titleCurrentMonth.textContent = popupTitle;
-        return localMarkedDays;
+        return [localMarkedDays, percent];
     }
 
-    // Create and append the SVG logo
-    const logoContainer = document.getElementById("logo");
     // console.log("marked: " + markedDays + " total: " + totalDays);
     let p_cent = Math.floor((markedDays / totalDays) * 100);
-    const svgLogo = createSvgLogo(75, p_cent); // Adjust the size as needed
-    logoContainer.appendChild(svgLogo);
+    const logoContainer = document.getElementById("logo");
+    logoContainer.style.display = "flex";
+    logoContainer.style.flexDirection = "row";
+    logoContainer.style.justifyContent = "start"; // Adjust alignment as needed
+    // logoContainer.style.width = "100%";
+    let percent_year = Math.floor((markedDaysCurYear / totalDaysCurYear) * 100);
+    appendTextAndSvg(logoContainer, "Life", 75, p_cent, "#74B3A5");
+    appendTextAndSvg(logoContainer, "Year", 75, percent_year, "#688f4e");
+    appendTextAndSvg(logoContainer, "Month", 75, res[1], "#C6CC6E");
+    // this is to let the popup table adjust to the lately appended dom
+    updatePopupRight(currentMonth, currentYear);
+
+    // Function to create a text element
+    function createTextElement(textContent) {
+        const textElement = document.createElement("div");
+        textElement.textContent = textContent;
+        textElement.style.fontSize = "14px"; // Adjust the font size as needed
+        textElement.style.color = "#fff"; // Adjust the text color as needed
+        textElement.style.textAlign = "center";
+        textElement.style.marginTop = "20px"; // Adjust the margin as needed
+        // textElement.style.marginBottom = "0px"; // Adjust the margin as needed
+        textElement.style.lineHeight = "0.2"; // Adjust the line height as needed
+        return textElement;
+    }
+
+    // Function to append text and SVG to a container
+    function appendTextAndSvg(logoContainer, text, svg_size, p_cent, color) {
+        const innerContainer = document.createElement("div");
+        innerContainer.style.display = "flex";
+        innerContainer.style.flexDirection = "column";
+        // innerContainer.style.marginRight = "0px"; // Adjust the right margin
+        // innerContainer.style.marginLeft = "0px"; // Adjust the left margin
+        const textElement = createTextElement(text);
+        // Append the text element to the logo container
+        innerContainer.appendChild(textElement);
+        const svgLogo = createSvgLogo(svg_size, p_cent, color); // Adjust the size as needed
+        innerContainer.appendChild(svgLogo);
+        logoContainer.appendChild(innerContainer);
+    }
 
     // Function to create the SVG logo
-    function createSvgLogo(size, percentage) {
+    function createSvgLogo(size, percentage, color) {
         const svgNS = "http://www.w3.org/2000/svg";
         const svg = document.createElementNS(svgNS, "svg");
         svg.setAttribute("width", size);
@@ -148,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
         backgroundCircle.setAttribute("cx", "50%");
         backgroundCircle.setAttribute("cy", "50%");
         backgroundCircle.setAttribute("r", "30%");
-        backgroundCircle.setAttribute("fill", "#688f4e"); // Background color
+        backgroundCircle.setAttribute("fill", color); // Background color
         svg.appendChild(backgroundCircle);
 
         // Create text element

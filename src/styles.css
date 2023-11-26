@@ -11,7 +11,7 @@ body {
 }
 
 #heatmap-container {
-    margin: 10vh auto; /* Adjust the top margin as needed */
+    margin: 2vh auto; /* Adjust the top margin as needed */
     border-collapse: collapse;
 }
 
