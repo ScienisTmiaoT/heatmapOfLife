@@ -2129,8 +2129,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // logoContainer.style.width = "100%";
     let percent_year = Math.floor((markedDaysCurYear / totalDaysCurYear) * 100);
     appendTextAndSvg(logoContainer, "Life", 75, p_cent, "#74B3A5");
-    appendTextAndSvg(logoContainer, "Year", 75, percent_year, "#688f4e");
-    appendTextAndSvg(logoContainer, "Month", 75, res[1], "#C6CC6E");
+    appendTextAndSvg(logoContainer, new Date().getFullYear(), 75, percent_year, "#688f4e");
+    appendTextAndSvg(logoContainer, currentMonth.substring(0, 3), 75, res[1], "#C6CC6E");
     // this is to let the popup table adjust to the lately appended dom
     updatePopupRight(currentMonth, currentYear);
 
