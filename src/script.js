@@ -2131,7 +2131,7 @@ document.addEventListener("DOMContentLoaded", function () {
     appendTextAndSvg(logoContainer, "Life", 75, p_cent, "#74B3A5");
     appendTextAndSvg(logoContainer, new Date().getFullYear(), 75, percent_year, "#688f4e");
     appendTextAndSvg(logoContainer, currentMonth.substring(0, 3), 75, res[1], "#C6CC6E");
-    appendTextAndSvg(logoContainer, "Lunar", 75, calculateLunarPassedPercent(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate()), "#b1d182");
+    appendTextAndSvg(logoContainer, getLunarYearStr(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate()), 75, calculateLunarPassedPercent(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate()), "#b1d182");
     // this is to let the popup table adjust to the lately appended dom
     updatePopupRight(currentMonth, currentYear);
 
@@ -2288,10 +2288,18 @@ function calculateLunarPassedPercent(year, month, day) {
     return Math.floor((passedDays / totalDays) * 100);
 }
 
+function getLunarYearStr(year, month, day) {
+    let str = getLunarStr(year, month, day).split("年")[0];
+    return str;
+}
+
 function getLunarMonthStr(year, month, day) {
+    let str = getLunarStr(year, month, day).split("年")[1].split("月")[0] + "月";
+    return str;
+}
+
+function getLunarStr(year, month, day) {
     let lunarDateArr = lunarFun.gregorianToLunal(year, month, day);
     let dateStr = lunarFun.formatLunarDate(lunarDateArr[0], lunarDateArr[1], lunarDateArr[2], true);
-    let monthStr = dateStr.split("年")[1].split("月")[0] + "月";
-    console.log(monthStr);
-    return monthStr;
+    return dateStr;
 }
