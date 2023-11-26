@@ -19,6 +19,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const totalCells = longevity;
     let markedCells = 0;
 
+    let markedDays = 0;
+    let totalDays = 0;
+
     // Generate the heatmap table
     for (let i = 0; i < Math.ceil(longevity / 12); i++) {
         const row = heatmapContainer.insertRow();
@@ -40,13 +43,15 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             const currentDate = new Date();
-            const lastDayOfMonth = new Date(year, months.indexOf(month), getDaysInMonth(month, year));
+            const daysPerMonth = getDaysInMonth(month, year);
+            const lastDayOfMonth = new Date(year, months.indexOf(month), daysPerMonth);
             // If all days of the month have passed, mark the cell as light green
             if (lastDayOfMonth < currentDate) {
                 cell.classList.add("passed-day");
                 markedCells++;
+                markedDays += daysPerMonth;
             }
-
+            totalDays += daysPerMonth;
             // Add a border to the cell if it belongs to the current year
             if (year === new Date().getFullYear()) {
                 cell.classList.add("current-year-cell");
@@ -63,13 +68,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (done) break;
     }
 
-    let p_cent = Math.floor((markedCells / totalCells) * 100);
-    // document.title += ` - ${p_cent}`;
-
     // Generate the popup table for the current month
     const currentMonth = months[new Date().getMonth()];
     currentYear = new Date().getFullYear();
-    updatePopupRight(currentMonth, currentYear);
+    markedDays += updatePopupRight(currentMonth, currentYear);
 
     // Function to update the popup on the right
     function updatePopupRight(selectedMonth, selectedYear) {
@@ -94,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const numOfWeeks = Math.ceil(daysInCurrentMonth / 7);
         let dayCounter = 1;
-        markedDays = 0;
+        let localMarkedDays = 0;
         for (let i = 0; i < numOfWeeks; i++) {
             const row = tableCurrentMonth.insertRow();
 
@@ -114,20 +116,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (selectedDate < currentDate) {
                     cell.classList.add("passed-day");
                     cell.classList.add("marked-cell");
-                    markedDays++;
+                    localMarkedDays++;
                 }
 
                 dayCounter++;
             }
         }
-        percent = Math.floor((markedDays / daysInCurrentMonth) * 100);
+        percent = Math.floor((localMarkedDays / daysInCurrentMonth) * 100);
         let abbreviatedMonth = selectedMonth.substring(0, 3);
         const popupTitle = `${abbreviatedMonth} ${selectedYear} - ${percent}%`;
         titleCurrentMonth.textContent = popupTitle;
+        return localMarkedDays;
     }
 
     // Create and append the SVG logo
     const logoContainer = document.getElementById("logo");
+    // console.log("marked: " + markedDays + " total: " + totalDays);
+    let p_cent = Math.floor((markedDays / totalDays) * 100);
     const svgLogo = createSvgLogo(75, p_cent); // Adjust the size as needed
     logoContainer.appendChild(svgLogo);
 
