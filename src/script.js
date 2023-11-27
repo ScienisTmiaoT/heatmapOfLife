@@ -1912,6 +1912,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const year = currentYear + Math.floor((start + i * colSize + j) / 12);
             cell.setAttribute("data-month", month);
             cell.setAttribute("data-year", year);
+            cell.setAttribute("title", `${month.substring(0, 3)} ${year}`);
             cell.classList.add("cell");
             const daysPerMonth = getDaysInMonth(month, year);
             if (year === new Date().getFullYear()) {
