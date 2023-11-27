@@ -1877,7 +1877,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     let currentYear = 1993;
-    const gridSize = 30;
+    const rowSize = 30;
+    const colSize = 30;
 
     // Function to get the number of days in a month
     function getDaysInMonth(month, year) {
@@ -1901,14 +1902,14 @@ document.addEventListener("DOMContentLoaded", function () {
         const row = heatmapContainer.insertRow();
         let done = false;
 
-        for (let j = 0; j < gridSize; j++) {
-            if ((i * gridSize + j) >= longevity) {
+        for (let j = 0; j < colSize; j++) {
+            if ((i * colSize + j) >= longevity) {
                 done = true;
                 break;
             }
             const cell = row.insertCell();
-            const month = months[(start + i * gridSize + j) % 12];
-            const year = currentYear + Math.floor((start + i * gridSize + j) / 12);
+            const month = months[(start + i * colSize + j) % 12];
+            const year = currentYear + Math.floor((start + i * colSize + j) / 12);
             cell.setAttribute("data-month", month);
             cell.setAttribute("data-year", year);
             cell.classList.add("cell");
