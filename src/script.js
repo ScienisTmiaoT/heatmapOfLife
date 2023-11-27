@@ -2099,6 +2099,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const cell = row.insertCell();
                 cell.classList.add("cell");
                 cell.textContent = dayCounter;
+                cell.title = getLunarStr(selectedYear, months.indexOf(selectedMonth) + 1, dayCounter);
 
                 const currentDate = new Date();
                 const selectedDate = new Date(selectedYear, months.indexOf(selectedMonth), dayCounter);

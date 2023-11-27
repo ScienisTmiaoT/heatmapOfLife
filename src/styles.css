@@ -151,9 +151,10 @@ body {
     background-color: initial; /* Override the hover effect for cells in the popup */
 }
 
-.popup-current-month .cell {
-    pointer-events: none; /* Make the cells unclickable */
-}
+/* .popup-current-month .cell { */
+    /* Make the cells unclickable */
+    /* pointer-events: none;  */
+/* } */
 
 .marked-cell {
     color: #ccc; /* Light gray color */
