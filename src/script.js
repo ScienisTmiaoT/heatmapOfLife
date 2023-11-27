@@ -2118,7 +2118,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let abbreviatedMonth = selectedMonth.substring(0, 3);
         const popupTitle = `${abbreviatedMonth} ${selectedYear} - ${percent}%`;
         titleCurrentMonth.textContent = popupTitle;
-        return [localMarkedDays, percent];
+        return [localMarkedDays, percent, daysInCurrentMonth];
     }
 
     // console.log("marked: " + markedDays + " total: " + totalDays);
@@ -2129,10 +2129,11 @@ document.addEventListener("DOMContentLoaded", function () {
     logoContainer.style.justifyContent = "start"; // Adjust alignment as needed
     // logoContainer.style.width = "100%";
     let percent_year = Math.floor((markedDaysCurYear / totalDaysCurYear) * 100);
-    appendTextAndSvg(logoContainer, "Life", 75, p_cent, "#74B3A5");
-    appendTextAndSvg(logoContainer, new Date().getFullYear(), 75, percent_year, "#688f4e");
-    appendTextAndSvg(logoContainer, currentMonth.substring(0, 3), 75, res[1], "#C6CC6E");
-    appendTextAndSvg(logoContainer, getLunarYearStr(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate()), 75, calculateLunarPassedPercent(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate()), "#b1d182");
+    appendTextAndSvg(logoContainer, "Life", 75, p_cent, "#74B3A5", markedDays + '/' + totalDays);
+    appendTextAndSvg(logoContainer, new Date().getFullYear(), 75, percent_year, "#688f4e", markedDaysCurYear + '/' + totalDaysCurYear);
+    appendTextAndSvg(logoContainer, currentMonth.substring(0, 3), 75, res[1], "#C6CC6E", res[0] + '/' + res[2]);
+    let lunarStats = calculateLunarPassedPercent(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate());
+    appendTextAndSvg(logoContainer, getLunarYearStr(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate()), 75, lunarStats[0], "#b1d182", lunarStats[1] + '/' + lunarStats[2]);
     // this is to let the popup table adjust to the lately appended dom
     updatePopupRight(currentMonth, currentYear);
 
@@ -2150,7 +2151,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Function to append text and SVG to a container
-    function appendTextAndSvg(logoContainer, text, svg_size, p_cent, color) {
+    function appendTextAndSvg(logoContainer, text, svg_size, p_cent, color, titleText) {
         const innerContainer = document.createElement("div");
         innerContainer.style.display = "flex";
         innerContainer.style.flexDirection = "column";
@@ -2159,13 +2160,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const textElement = createTextElement(text);
         // Append the text element to the logo container
         innerContainer.appendChild(textElement);
-        const svgLogo = createSvgLogo(svg_size, p_cent, color); // Adjust the size as needed
+        const svgLogo = createSvgLogo(svg_size, p_cent, color, titleText); // Adjust the size as needed
         innerContainer.appendChild(svgLogo);
         logoContainer.appendChild(innerContainer);
     }
 
     // Function to create the SVG logo
-    function createSvgLogo(size, percentage, color) {
+    function createSvgLogo(size, percentage, color, titleText) {
         const svgNS = "http://www.w3.org/2000/svg";
         const svg = document.createElementNS(svgNS, "svg");
         svg.setAttribute("width", size);
@@ -2191,6 +2192,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Append text to SVG
         svg.appendChild(text);
+
+        // Create a title element
+        const title = document.createElementNS(svgNS, 'title');
+        title.textContent = titleText; // Set your title text here
+        svg.appendChild(title);
 
         return svg;
     }
@@ -2286,7 +2292,7 @@ function calculateLunarPassedPercent(year, month, day) {
     let lunarDateArr = lunarFun.gregorianToLunal(year, month, day);
     let passedDays = lunarFun.distanceLunarFirstDays(lunarDateArr[0], lunarDateArr[1], lunarDateArr[2], true);
     let totalDays = lunarFun.getLunarYearDaysTotal(lunarDateArr[0]);
-    return Math.floor((passedDays / totalDays) * 100);
+    return [Math.floor((passedDays / totalDays) * 100), passedDays, totalDays];
 }
 
 function getLunarYearStr(year, month, day) {
