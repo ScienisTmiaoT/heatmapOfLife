@@ -1910,6 +1910,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const cell = row.insertCell();
             const month = months[(start + i * colSize + j) % 12];
             const year = currentYear + Math.floor((start + i * colSize + j) / 12);
+            // make the cell editable
+            // cell.setAttribute('contenteditable', 'true');
             cell.setAttribute("data-month", month);
             cell.setAttribute("data-year", year);
             cell.setAttribute("title", `${month.substring(0, 3)} ${year}`);
@@ -2069,6 +2071,7 @@ document.addEventListener("DOMContentLoaded", function () {
             previousPopup.remove();
         }
         const daysInCurrentMonth = getDaysInMonth(selectedMonth, selectedYear);
+        const lastDayOfMonth = new Date(selectedYear, months.indexOf(selectedMonth), daysInCurrentMonth);
 
         const popupContainerCurrentMonth = document.createElement("div");
         popupContainerCurrentMonth.classList.add("popup-current-month");
@@ -2120,7 +2123,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let abbreviatedMonth = selectedMonth.substring(0, 3);
         const popupTitle = `${abbreviatedMonth} ${selectedYear} - ${percent}%`;
         titleCurrentMonth.textContent = popupTitle;
-        return [localMarkedDays, percent, daysInCurrentMonth];
+        return [lastDayOfMonth < new Date() ? 0 : localMarkedDays, percent, daysInCurrentMonth, localMarkedDays];
     }
 
     // console.log("marked: " + markedDays + " total: " + totalDays);
@@ -2133,7 +2136,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let percent_year = Math.floor((markedDaysCurYear / totalDaysCurYear) * 100);
     appendTextAndSvg(logoContainer, "Life", 75, p_cent, "#74B3A5", markedDays + '/' + totalDays);
     appendTextAndSvg(logoContainer, new Date().getFullYear(), 75, percent_year, "#688f4e", markedDaysCurYear + '/' + totalDaysCurYear);
-    appendTextAndSvg(logoContainer, currentMonth.substring(0, 3), 75, res[1], "#C6CC6E", res[0] + '/' + res[2]);
+    appendTextAndSvg(logoContainer, currentMonth.substring(0, 3), 75, res[1], "#C6CC6E", res[3] + '/' + res[2]);
     let lunarStats = calculateLunarPassedPercent(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate());
     appendTextAndSvg(logoContainer, getLunarYearStr(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate()), 75, lunarStats[0], "#b1d182", lunarStats[1] + '/' + lunarStats[2]);
     // this is to let the popup table adjust to the lately appended dom
